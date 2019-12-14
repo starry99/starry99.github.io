@@ -1,0 +1,59 @@
+
+title: Chansey
+email: kimjanbyeol@gmail.com 
+description: machine learning developer
+
+# the subpath of the site
+# baseurl:  
+url: http://starry99.github.io
+
+permalink: /:year-:month/:title
+timezone: Asia/Seoul
+
+favicon: /assets/img/favicon.ico
+
+google_analytics: UA-135755815-2
+disqus_shortname: starry99
+
+user:
+  name: Chansey
+  pic: /assets/img/chansey.png
+  picAlt: "chansey"
+  job: do the next right thing
+
+exclude:
+  - README.md
+  - LICENSE
+  - github
+
+defaults:
+  - scope:
+      path: "_posts"
+      type: posts
+    values:
+      layout: post
+      comment: true    
+
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+  - jekyll-sitemap
+
+markdown_ext: "markdown,mkdown,mkdn,mkd,md"
+markdown: kramdown 
+kramdown:  
+  auto_ids: true
+  entity_output: as_char
+  toc_levels: 1..6
+  smart_quotes: lsquo,rsquo,ldquo,rdquo
+  input: GFM
+  hard_wrap: false
+  footnote_nr: 1
+  show_warnings: false
+  enable_coderay: false
+
+# Filtering Content
+show_drafts: null
+limit_posts: 0
+future:      false
+unpublished: false
