@@ -15,6 +15,9 @@ favicon: /assets/img/favicon.ico
 google_analytics: UA-135755815-2
 disqus_shortname: starry99
 
+feed:
+  path: atom.xml
+
 user:
   name: Chansey
   pic: /assets/img/chansey.png
@@ -33,11 +36,6 @@ defaults:
     values:
       layout: post
       comment: true    
-
-plugins:
-  - jekyll-feed
-  - jekyll-seo-tag
-  - jekyll-sitemap
 
 markdown_ext: "markdown,mkdown,mkdn,mkd,md"
 markdown: kramdown 
