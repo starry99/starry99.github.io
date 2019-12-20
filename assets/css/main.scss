@@ -146,7 +146,7 @@ img {
     z-index: 0;
     background: var(--content_bg);
     position: relative;
-    max-width: 90%;
+    max-width: 92%;
     min-height: 85%;
     border-radius: 15px;
     box-shadow: 0 0 2px 2px var(--shadow_color);
@@ -161,6 +161,7 @@ img {
 
     @include mobile-only {
         padding-top: 16rem;
+        min-height: 100%;
     }
 
 }
@@ -181,8 +182,8 @@ img {
 
     @include mobile-only {
         margin-top: 2rem;
-        margin-left: 2.5rem;
-        margin-right: 2.5rem;
+        margin-left: 1rem;
+        margin-right: 1rem;
     }
 
     img {
@@ -251,19 +252,25 @@ img {
 
     @include mobile-only {
         margin-top: 2rem;
-        margin-left: 2.5rem;
-        margin-right: 2.5rem;
+        margin-left: 1.2rem;
+        margin-right: 1.2rem;
     }
 }
 
 .archive_date {
-    float: right;
     text-transform: uppercase;
+
+    @include breakpoint(medium) {
+        float: right;
+    }
 }
 
 .archive_title {
-    max-width: 80%;
+    
     word-wrap: normal;
+    @include breakpoint(medium) {
+        max-width: 80%;
+    }
 }
 
 .archive_type {
@@ -504,10 +511,9 @@ img {
     }
 
     @include mobile-only {
-        padding: 0 10px;
         margin-top: 2rem;
-        margin-left: 2rem;
-        margin-right: 2rem;
+        margin-left: 1rem;
+        margin-right: 1rem;
     }
 }
 
