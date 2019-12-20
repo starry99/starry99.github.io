@@ -74,10 +74,7 @@ html {
     margin: 0;
     padding: 0;
     height: 100%;
-
-    @include breakpoint(medium) {
-        overflow: hidden;
-    }
+    overflow: hidden;
 }
 
 html,
@@ -506,7 +503,7 @@ img {
     color: var(--post_text);
 
     @include breakpoint(medium) {
-        max-width: 32rem;
+        max-width: 33rem;
         margin-top: 5rem;
     }
 
