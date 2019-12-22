@@ -122,7 +122,6 @@ body {
     -webkit-text-size-adjust: 100%;
     
     @include breakpoint(medium) {
-        // overflow: auto;
         zoom: 1;
     }
 }
@@ -160,7 +159,6 @@ img {
         padding-top: 16rem;
         min-height: 100%;
     }
-
 }
 
 .main {
@@ -263,7 +261,6 @@ img {
 }
 
 .archive_title {
-    
     word-wrap: normal;
     @include breakpoint(medium) {
         max-width: 80%;
@@ -599,8 +596,6 @@ img {
     }
 
     pre {
-        font-family: 'Noto Sans KR', sans-serif;
-        // font-family: Consolas, Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace, serif;
         font-size: 0.85rem;
         text-decoration: none;
         display: block;
@@ -625,7 +620,6 @@ img {
     }
 
     img {
-        // width: 100%;
         border-radius: 5px;
     }
 
