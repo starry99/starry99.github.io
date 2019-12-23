@@ -1,7 +1,6 @@
 ---
 title: 런던 해리포터 스튜디오 (2019년 겨울 기준)
 categories: [travel]
-last_edited: 2019-12-09
 comments: true
 keywords:
   - 워너브라더스 스튜디오

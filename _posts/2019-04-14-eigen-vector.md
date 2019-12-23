@@ -1,5 +1,5 @@
 ---
-title: Eigenvector(고유벡터) 및 Eigenvalue(고유값)
+title: Eigenvector(고유벡터) 및 Eigenvalue(고유값) 쉬운 설명
 categories: [math]
 last_edited: 
 comments: true
