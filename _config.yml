@@ -5,7 +5,7 @@ description: machine learning developer
 
 # the subpath of the site
 # baseurl:  
-url: http://starry99.github.io
+url: https://starry99.github.io
 
 permalink: /:year-:month/:title
 timezone: Asia/Seoul
@@ -28,6 +28,7 @@ exclude:
   - README.md
   - LICENSE
   - github
+  - .jekyll-cache
 
 defaults:
   - scope:
