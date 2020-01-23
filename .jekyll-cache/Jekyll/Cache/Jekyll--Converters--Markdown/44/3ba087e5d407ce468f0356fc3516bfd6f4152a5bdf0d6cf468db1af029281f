@@ -1,0 +1,60 @@
+I"9<p>이공계 대학생이면 eigenvector(고유벡터) 및 eigenvalue(고유값)에 대해 배우게 됩니다. 얘내들을 더 쉽고 잘 이해하는데 도움이 될만한 <a href="https://qr.ae/TWXgKy" target="_blank">자료1</a>, <a href="https://math.stackexchange.com/questions/23312/what-is-the-importance-of-eigenvalues-eigenvectors" target="_blank">자료2</a>를 보게 되어 한번 쉽게 정리해보겠습니다.</p>
+
+<p>결론부터 말하면 eigenvector란 linear transformation(선형변환)이 가해져도 방향이 변하지 않는 벡터를 의미합니다. 이게 무슨 말인지 쉽게 알아봅시다.</p>
+
+<p>쭉쭉 잘 늘어나는 고무 시트를 상상해봅시다. 여기에 화살표를 여러개를 그렸다고 해봅시다.</p>
+
+<p><img src="http://localhost:4000/assets/img/post/e.png" alt="" /></p>
+
+<p>이제 이 고무를 쭉 늘려본다고 상상합니다. 예를 들어 원래보다 정확히 가로로 2배 쭉 늘렸다고 합시다. 화살표들은 어떻게 될까요? (화살표 두께는 무시)</p>
+
+<p><img src="http://localhost:4000/assets/img/post/e2.png" alt="" /></p>
+
+<p>가로로 2배 늘리는 것에 의해, 일반적인 검정색 화살표들의 방향은 변하게 됩니다. 하지만 방향이 변하지 않는 애들이 있습니다. 우선 가로로 그어진 주황색 애들입니다. 얘내들은 방향은 그대로고, 그 길이만 2배로 변했습니다.</p>
+
+<p>그리고 방향이 변하지 않는 애들이 하나 더 있습니다. 바로 정확히 가로로 그어진 청록색 애들입니다. 얘내들은 방향은 물론 길이도 변하지 않게 됩니다.</p>
+
+<p>eigenvector란 이처럼 어떤 ‘변환’에 대해서 방향이 변하지 않는 벡터(화살표)를 의미합니다. 즉 위처럼 ‘세로는 그대로 두고 가로만 2배로 늘리는 변환’에 대해서는 두 종류의 eigenvector가 존재함을 알 수 있습니다.</p>
+
+<hr />
+
+<p>말했듯, 특정 선형변환에서 eigenvector의 크기는 변해도 됩니다. 그 크기를 나타내는 것이 바로 eigenvalue입니다.</p>
+
+<p>위의 예제에서는 주황색 화살표에 대한 eigenvalue는 2이고, 청록색 화살표에 대한 eigenvalue는 1이 됩니다.</p>
+
+<p><code class="highlighter-rouge">Ax = λx</code> 아마 이 식은 자주 봤을 겁니다. <code class="highlighter-rouge">x</code>라는 어떤 벡터에 선형변환 <code class="highlighter-rouge">A</code>를 가했을 때, 방향이 같고(<code class="highlighter-rouge">=</code>이 성립) 그 크기만 <code class="highlighter-rouge">λ</code>만큼 변한다는 의미입니다. 정리하면 이 식을 만족하는 벡터 <code class="highlighter-rouge">x</code>가 eigenvector라는 것이죠. 이렇듯 항상 수식을 ‘이해’하는 것이 중요합니다.</p>
+
+<p>결국 eigenvector와 eigenvalue는 특정 ‘선형변환’을 쉽게 이해하기 위한 도구의 하나입니다. 엄밀히는 방향이 정확히 180도 변해도 되는 등, 위의 설명은 약간은 쉽게 표현한 것이지만, 여기까지까지만 이해해도 어느정도 개념을 잡을 수 있을 것이라 생각합니다.</p>
+
+<hr />
+
+<p>혹시 좀 더 궁금하신 분들을 위해, 약간만 더 심화로 들어가봅시다.</p>
+
+<p>예를 들어서 아래와 같은 선형미분방정식 시스템을 생각해봅시다.</p>
+
+<script type="math/tex; mode=display">{dx\over dt} = ax + by</script>
+
+<script type="math/tex; mode=display">{dy\over dt} = ax + by</script>
+
+<p>위 시스템은 예컨데 두 종(species)의 개체수가 서로 간단히 영향을 주는 경우를 나타냅니다. x종을 y종의 천적이라고 하면, x가 많아질수록 y의 수는 줄어듭니다. 이때 y의 수가 줄면 x의 먹이감도 주는 것이므로, x의 수도 줄어들죠. 그럼 천적이 줄어 다시 y의 수가 늘어나고, 먹이가 늘어나므로 다시 x의 수가 증가합니다. 이렇게 계속 반복되는 시스템입니다. 이외에도 여러가지 과학적 현상을 표현할 때 사용할 수 있는 선형시스템입니다.</p>
+
+<p>이 시스템을 직접 푸는 것은 복잡합니다. 대학에서 미방 수업 때 쉽게 푸는 법들을 배우는데요, 임의의 새로운 상수 α,β,γ,δ를 이용한 <code class="highlighter-rouge">z=αx+βy</code>와 <code class="highlighter-rouge">w=γx+δy</code>로 변수를 바꾸면 아래와 같습니다. (dt로 미분 후, 원래식 대입)</p>
+
+<script type="math/tex; mode=display">{dz\over dt} = κz</script>
+
+<script type="math/tex; mode=display">{dw\over dt} = λw</script>
+
+<p>이제 미방을 풀기가 훨씬 쉬워졌습니다. 왜냐하면 이제 <code class="highlighter-rouge">z</code>, <code class="highlighter-rouge">w</code>로 서로 독립적인 두 식이기 때문이죠. 따라서 위 식을 풀면,</p>
+
+<script type="math/tex; mode=display">z=Ae^{\kappa t},w=Be^{\lambda t}</script>
+
+<p>이제 이 식에 <code class="highlighter-rouge">z=αx+βy</code>와 <code class="highlighter-rouge">w=γx+δy</code>를 대입해서, <code class="highlighter-rouge">x</code>, <code class="highlighter-rouge">y</code>에 대한 식을 구하면 됩니다. 자 여기서, 왜 이 예제를 설명했는지 이유를 알아봅시다.</p>
+
+<p>이렇게 <code class="highlighter-rouge">x</code>와 <code class="highlighter-rouge">y</code>가 섞인 <code class="highlighter-rouge">z</code>와 <code class="highlighter-rouge">w</code>를 도입하고 서로 독립적인 식을 만들어 문제를 더 쉽게 푼 과정은, 맨처음 시스템의 2차원 행렬 <script type="math/tex">% <![CDATA[
+\begin{pmatrix}a&b\\c&d\end{pmatrix} %]]></script>에서 선형독립인(linearly independent) eigenvector를 구하는 것과 정확히 같습니다! 이때 eigenvector는 <code class="highlighter-rouge">z</code>, <code class="highlighter-rouge">w</code>와, eigenvalue는 <code class="highlighter-rouge">κ</code>, <code class="highlighter-rouge">λ</code>와 같게 됩니다.</p>
+
+<p>이러한 것이 바로 eigenvector와 eigenvalue를 구하는 핵심적인 이유입니다. 선형시스템을 (선형변환에 해당하는) 적절한 방향으로 “나누어(decouple)” “독립적으로” 다룰 수 있도록 하기위함입니다.</p>
+
+<p>eigenvector와 eigenvalue를 구함으로써 선형시스템이, 선형변환이, 어떤 행렬이 무엇을 하는지 더 쉽게 이해할수 있게 됩니다.</p>
+
+:ET

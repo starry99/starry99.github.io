@@ -1,14 +1,10 @@
 ---
 title: Eigenvector(고유벡터) 및 Eigenvalue(고유값) 쉬운 설명
 categories: [math]
-last_edited: 
 comments: true
-keywords:
-  - 선형대수학
-  - Linear Transformation
 ---
 
-이공계 대학생이면 eigenvector(고유벡터) 및 eigenvalue(고유값)에 대해 배우게 됩니다. 얘내들을 더 쉽고 잘 이해하는데 도움이 될만한 [자료1](https://qr.ae/TWXgKy), [자료2](https://math.stackexchange.com/questions/23312/what-is-the-importance-of-eigenvalues-eigenvectors)를 보게 되어 한번 쉽게 정리해보겠습니다.
+이공계 대학생이면 eigenvector(고유벡터) 및 eigenvalue(고유값)에 대해 배우게 됩니다. 얘내들을 더 쉽고 잘 이해하는데 도움이 될만한 [자료1](https://qr.ae/TWXgKy){: target="_blank" }, [자료2](https://math.stackexchange.com/questions/23312/what-is-the-importance-of-eigenvalues-eigenvectors){: target="_blank" }를 보게 되어 한번 쉽게 정리해보겠습니다.
 
 결론부터 말하면 eigenvector란 linear transformation(선형변환)이 가해져도 방향이 변하지 않는 벡터를 의미합니다. 이게 무슨 말인지 쉽게 알아봅시다.
 
