@@ -127,7 +127,7 @@ export default function Desktop({
             onClose={() => setIsSystemInfoOpen(false)}
             isMobile={isMobile}
           >
-            <div className="w-80 p-4 bg-win-bg flex flex-col font-pixel text-sm">
+            <div className="w-90 p-4 bg-win-bg flex flex-col font-pixel text-sm">
               <div className="flex gap-4 mb-6 mt-2">
                 <div className="flex flex-col justify-center gap-1">
                   <p>Last Updated: 25.12.30</p>
