@@ -148,7 +148,7 @@ export default function Desktop({
                 >
                   <p className="text-sm" >Code Ref: <a href="https://codepen.io/gabriellewee/pen/MWqRZzp" target='_blank'>Gabrielle Wee</a>, <a href="https://github.com/JSLegendDev/Pokemon-p5js" target='_blank'>JSLegendDev</a></p>
                   <p className="text-sm">Tilesets: <a href="https://www.deviantart.com/akizakura16/art/Hi-res-Interior-General-Tileset-588725678" target='_blank'>Akizakura16</a>, <a href="https://www.deviantart.com/tobalcr/art/POKEMON-BW-CHRISTMAS-TILESET-FOR-POKEMON-FANGAMES-1131592133" target='_blank'>TobalCR</a></p>
-                  <p className="text-sm">Character: <a href="https://www.pokecommunity.com/threads/fire-red-overworld-sprite-resource.407124" target='_blank'>Kalarie</a></p>
+                  <p className="text-sm">Character: <a href="https://www.pokecommunity.com/threads/fire-red-overworld-sprite-resource.407124" target='_blank'>Kalarie</a>, <a href="https://www.deviantart.com/lolw3e932/art/NPC-32-729485034" target='_blank'>Lolw3e932</a>, <a href="https://www.deviantart.com/aveontrainer/art/Rich-Boy-815899381" target='_blank'>aveontrainer</a></p>
                 </div>
               </div>
             </div>
