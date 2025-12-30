@@ -87,20 +87,22 @@ function App() {
           >
             {showCanvas ? (
               <div className="flex flex-col flex-grow min-h-0 w-full h-full items-center justify-center">
-                <P5Canvas width={canvasWidth} height={canvasHeight} />
+                <P5Canvas width={canvasWidth} height={canvasHeight} isMobile={true} />
               </div>
             ) : (
-              <>
-                <div className="p-5 self-center flex justify-center items-center flex-grow min-h-0">
+              <div className="flex flex-col items-center justify-center flex-grow w-full">
+                <div className="p-4 flex justify-center items-center">
                   <div
-                    className="w-full max-w-[420px] aspect-[360/338] bg-cover bg-center flex-shrink-0"
+                    className="bg-cover bg-center"
                     style={{
+                      width: `${Math.min(windowSize.width * 0.8, 360)}px`,
+                      height: `${Math.min(windowSize.width * 0.8, 360) * (338/360)}px`,
                       boxShadow: 'inset -1.5px -1.5px 0 0 var(--win-border-light), inset 1.5px 1.5px 0 0 var(--win-shadow-dark)',
                       backgroundImage: 'url("./assets/main.png")',
                     }}
                   />
                 </div>
-                <div className="flex flex-col justify-center items-center pb-[19px] bg-win-bg">
+                <div className="flex flex-col justify-center items-center py-4 bg-win-bg">
                   <button
                     className="win-button font-bold"
                     onClick={() => setShowCanvas(true)}
@@ -112,7 +114,7 @@ function App() {
                     <span className="start-btn">START</span>
                   </button>
                 </div>
-              </>
+              </div>
             )}
           </Window>
         )}

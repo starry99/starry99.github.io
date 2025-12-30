@@ -26,6 +26,11 @@ export interface World {
   checkInteraction: () => void;
   keyReleased: () => void;
   setPlayerGender: (gender: 'male' | 'female') => void;
+  // Mobile controls
+  mobileDirection: string | null;
+  startMove: (direction: 'up' | 'down' | 'left' | 'right') => void;
+  stopMove: () => void;
+  interact: () => void;
 }
 
 export function makeWorld(p: p5): World {
@@ -335,6 +340,34 @@ export function makeWorld(p: p5): World {
     
         if (!isFinite(this.scale) || this.scale <= 0) this.scale = 1;
       }
+
+      // Handle mobile direction input
+      if (this.mobileDirection && !this.player.freeze) {
+        const moveBy = (this.player.speed / 1000) * p.deltaTime;
+        switch (this.mobileDirection) {
+          case 'up':
+            this.player.setDirection('up');
+            this.player.setAnim('run-up');
+            this.player.y -= moveBy;
+            break;
+          case 'down':
+            this.player.setDirection('down');
+            this.player.setAnim('run-down');
+            this.player.y += moveBy;
+            break;
+          case 'left':
+            this.player.setDirection('left');
+            this.player.setAnim('run-side');
+            this.player.x -= moveBy;
+            break;
+          case 'right':
+            this.player.setDirection('right');
+            this.player.setAnim('run-side');
+            this.player.x += moveBy;
+            break;
+        }
+      }
+
       this.camera.update(this.scale);
       this.player.update();
       this.npcs.forEach(npc => npc.update());
@@ -622,6 +655,37 @@ export function makeWorld(p: p5): World {
     },
     setPlayerGender(gender: 'male' | 'female') {
       this.player.setGender(gender);
+    },
+
+    // Mobile controls
+    mobileDirection: null as string | null,
+
+    startMove(direction: 'up' | 'down' | 'left' | 'right') {
+      this.mobileDirection = direction;
+    },
+
+    stopMove() {
+      this.mobileDirection = null;
+      switch (this.player.direction) {
+        case "up":
+          this.player.setAnim("idle-up");
+          break;
+        case "down":
+          this.player.setAnim("idle-down");
+          break;
+        case "left":
+        case "right":
+          this.player.setAnim("idle-side");
+          break;
+      }
+    },
+
+    interact() {
+      if (this.dialogBox.isVisible) {
+        this.dialogBox.handleInput();
+      } else {
+        this.checkInteraction();
+      }
     }
   };
 }
