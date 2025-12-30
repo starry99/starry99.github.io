@@ -7,12 +7,15 @@ interface P5CanvasProps {
   width?: number
   height?: number
   isMobile?: boolean
+  worldRef?: React.MutableRefObject<ReturnType<typeof makeWorld> | null>
 }
 
-export default function P5Canvas({ width = 512, height = 384, isMobile = false }: P5CanvasProps) {
+export default function P5Canvas({ width = 512, height = 384, isMobile = false, worldRef: externalWorldRef }: P5CanvasProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const p5InstanceRef = useRef<p5 | null>(null)
-  const worldRef = useRef<ReturnType<typeof makeWorld> | null>(null)
+  const internalWorldRef = useRef<ReturnType<typeof makeWorld> | null>(null)
+  
+  const worldRef = externalWorldRef || internalWorldRef
 
   useEffect(() => {
     if (!containerRef.current) return
@@ -23,25 +26,10 @@ export default function P5Canvas({ width = 512, height = 384, isMobile = false }
 
       p.preload = () => {
         try {
-          console.log('P5Canvas: preload started')
-          font = p.loadFont(
-            '/assets/power-clear.ttf',
-            () => {
-              console.log('P5Canvas: font loaded successfully')
-            },
-            (err: any) => {
-              console.error('P5Canvas: font load error', err)
-            }
-          )
+          font = p.loadFont('/assets/power-clear.ttf')
           world = makeWorld(p)
           worldRef.current = world
-          try {
-            world.load()
-            console.log('P5Canvas: world.load() called')
-          } catch (error) {
-            console.error('P5Canvas: world.load() error', error)
-          }
-          console.log('P5Canvas: preload function completed', { font, world })
+          world.load()
         } catch (error) {
           console.error('P5Canvas: preload error', error)
         }
@@ -49,12 +37,7 @@ export default function P5Canvas({ width = 512, height = 384, isMobile = false }
 
       p.setup = () => {
         try {
-          console.log('P5Canvas: setup started', { font, world, container: containerRef.current })
-
-          if (!world) {
-            console.error('P5Canvas: world not loaded')
-            return
-          }
+          if (!world) return
 
           const canvasEl = p.createCanvas(width, height, containerRef.current!)
           p.pixelDensity(3)
@@ -71,10 +54,8 @@ export default function P5Canvas({ width = 512, height = 384, isMobile = false }
           p.noSmooth()
 
           world.setup()
-          console.log('P5Canvas: setup completed')
         } catch (error) {
           console.error('P5Canvas: setup error', error)
-          console.error('P5Canvas: setup error stack', (error as Error).stack)
         }
       }
 
@@ -127,101 +108,26 @@ export default function P5Canvas({ width = 512, height = 384, isMobile = false }
     }
   }, [width, height])
 
-  const handleMoveStart = (direction: 'up' | 'down' | 'left' | 'right') => {
-    if (worldRef.current) {
-      worldRef.current.startMove(direction)
-    }
-  }
-
-  const handleMoveEnd = () => {
-    if (worldRef.current) {
-      worldRef.current.stopMove()
-    }
-  }
-
-  const handleInteract = () => {
-    if (worldRef.current) {
-      worldRef.current.interact()
-    }
-  }
-
   return (
-    <div className="relative" style={{ width: `${width}px`, height: `${height}px` }}>
-      <div
-        ref={containerRef}
-        className="flex items-center justify-center bg-black w-full h-full"
-      />
+    <div className="relative">
+      {/* Canvas Container */}
+      <div style={{ width: `${width}px`, height: `${height}px` }}>
+        <div
+          ref={containerRef}
+          className="flex items-center justify-center bg-black w-full h-full"
+        />
+      </div>
       
-      {isMobile ? (
-        /* Mobile Controls: D-pad + Action Button */
-        <div className="absolute bottom-2 left-0 w-full flex justify-between items-end px-4 pointer-events-none">
-          {/* D-Pad */}
-          <div className="relative w-28 h-28 pointer-events-auto">
-            {/* Up */}
-            <button
-              className="absolute top-0 left-1/2 -translate-x-1/2 w-10 h-10 win-button flex items-center justify-center text-xl font-bold"
-              onTouchStart={() => handleMoveStart('up')}
-              onTouchEnd={handleMoveEnd}
-              onMouseDown={() => handleMoveStart('up')}
-              onMouseUp={handleMoveEnd}
-              onMouseLeave={handleMoveEnd}
-            >
-              ▲
-            </button>
-            {/* Down */}
-            <button
-              className="absolute bottom-0 left-1/2 -translate-x-1/2 w-10 h-10 win-button flex items-center justify-center text-xl font-bold"
-              onTouchStart={() => handleMoveStart('down')}
-              onTouchEnd={handleMoveEnd}
-              onMouseDown={() => handleMoveStart('down')}
-              onMouseUp={handleMoveEnd}
-              onMouseLeave={handleMoveEnd}
-            >
-              ▼
-            </button>
-            {/* Left */}
-            <button
-              className="absolute left-0 top-1/2 -translate-y-1/2 w-10 h-10 win-button flex items-center justify-center text-xl font-bold"
-              onTouchStart={() => handleMoveStart('left')}
-              onTouchEnd={handleMoveEnd}
-              onMouseDown={() => handleMoveStart('left')}
-              onMouseUp={handleMoveEnd}
-              onMouseLeave={handleMoveEnd}
-            >
-              ◀
-            </button>
-            {/* Right */}
-            <button
-              className="absolute right-0 top-1/2 -translate-y-1/2 w-10 h-10 win-button flex items-center justify-center text-xl font-bold"
-              onTouchStart={() => handleMoveStart('right')}
-              onTouchEnd={handleMoveEnd}
-              onMouseDown={() => handleMoveStart('right')}
-              onMouseUp={handleMoveEnd}
-              onMouseLeave={handleMoveEnd}
-            >
-              ▶
-            </button>
-          </div>
-
-          {/* Action Button */}
-          <button
-            className="pointer-events-auto w-14 h-14 win-button flex items-center justify-center text-sm font-bold rounded-full"
-            onTouchStart={handleInteract}
-            onMouseDown={handleInteract}
-          >
-            A
-          </button>
-        </div>
-      ) : (
-        /* Desktop Controls: Gender Selection */
+      {/* Desktop Controls: Gender Selection (overlaid at bottom) */}
+      {!isMobile && (
         <div className="absolute bottom-4 left-0 w-full flex justify-center gap-4 pointer-events-none">
           <button 
             className="pointer-events-auto win-button font-bold text-base"
             onClick={() => {
               if (worldRef.current) {
-                worldRef.current.setPlayerGender('male');
-                const canvas = containerRef.current?.querySelector('canvas');
-                if (canvas instanceof HTMLElement) canvas.focus();
+                worldRef.current.setPlayerGender('male')
+                const canvas = containerRef.current?.querySelector('canvas')
+                if (canvas instanceof HTMLElement) canvas.focus()
               }
             }}
           >
@@ -231,9 +137,9 @@ export default function P5Canvas({ width = 512, height = 384, isMobile = false }
             className="pointer-events-auto win-button font-bold text-base"
             onClick={() => {
               if (worldRef.current) {
-                worldRef.current.setPlayerGender('female');
-                const canvas = containerRef.current?.querySelector('canvas');
-                if (canvas instanceof HTMLElement) canvas.focus();
+                worldRef.current.setPlayerGender('female')
+                const canvas = containerRef.current?.querySelector('canvas')
+                if (canvas instanceof HTMLElement) canvas.focus()
               }
             }}
           >
@@ -241,6 +147,106 @@ export default function P5Canvas({ width = 512, height = 384, isMobile = false }
           </button>
         </div>
       )}
+    </div>
+  )
+}
+
+// Separate Mobile Controls Component
+interface MobileControlsProps {
+  worldRef: React.MutableRefObject<ReturnType<typeof makeWorld> | null>
+}
+
+export function MobileControls({ worldRef }: MobileControlsProps) {
+  const lastInteractTime = useRef(0)
+
+  const handleMoveStart = (e: React.TouchEvent | React.MouseEvent, direction: 'up' | 'down' | 'left' | 'right') => {
+    e.preventDefault()
+    e.stopPropagation()
+    if (worldRef.current) {
+      worldRef.current.startMove(direction)
+    }
+  }
+
+  const handleMoveEnd = (e: React.TouchEvent | React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    if (worldRef.current) {
+      worldRef.current.stopMove()
+    }
+  }
+
+  const handleInteract = (e: React.TouchEvent | React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    
+    // Debounce: prevent rapid firing (300ms cooldown)
+    const now = Date.now()
+    if (now - lastInteractTime.current < 300) return
+    lastInteractTime.current = now
+
+    if (worldRef.current) {
+      worldRef.current.interact()
+    }
+  }
+
+  return (
+    <div className="w-full flex justify-between items-center px-8 py-3" style={{ touchAction: 'none' }}>
+      {/* D-Pad */}
+      <div className="relative w-28 h-28">
+        {/* Up */}
+        <button
+          className="absolute top-0 left-1/2 -translate-x-1/2 w-10 h-10 win-button flex items-center justify-center text-xl font-bold select-none"
+          onTouchStart={(e) => handleMoveStart(e, 'up')}
+          onTouchEnd={handleMoveEnd}
+          onMouseDown={(e) => handleMoveStart(e, 'up')}
+          onMouseUp={handleMoveEnd}
+          onMouseLeave={handleMoveEnd}
+        >
+          ▲
+        </button>
+        {/* Down */}
+        <button
+          className="absolute bottom-0 left-1/2 -translate-x-1/2 w-10 h-10 win-button flex items-center justify-center text-xl font-bold select-none"
+          onTouchStart={(e) => handleMoveStart(e, 'down')}
+          onTouchEnd={handleMoveEnd}
+          onMouseDown={(e) => handleMoveStart(e, 'down')}
+          onMouseUp={handleMoveEnd}
+          onMouseLeave={handleMoveEnd}
+        >
+          ▼
+        </button>
+        {/* Left */}
+        <button
+          className="absolute left-0 top-1/2 -translate-y-1/2 w-10 h-10 win-button flex items-center justify-center text-xl font-bold select-none"
+          onTouchStart={(e) => handleMoveStart(e, 'left')}
+          onTouchEnd={handleMoveEnd}
+          onMouseDown={(e) => handleMoveStart(e, 'left')}
+          onMouseUp={handleMoveEnd}
+          onMouseLeave={handleMoveEnd}
+        >
+          ◀
+        </button>
+        {/* Right */}
+        <button
+          className="absolute right-0 top-1/2 -translate-y-1/2 w-10 h-10 win-button flex items-center justify-center text-xl font-bold select-none"
+          onTouchStart={(e) => handleMoveStart(e, 'right')}
+          onTouchEnd={handleMoveEnd}
+          onMouseDown={(e) => handleMoveStart(e, 'right')}
+          onMouseUp={handleMoveEnd}
+          onMouseLeave={handleMoveEnd}
+        >
+          ▶
+        </button>
+      </div>
+
+      {/* Action Button */}
+      <button
+        className="w-14 h-14 win-button flex items-center justify-center text-lg font-bold select-none"
+        onTouchEnd={handleInteract}
+        onMouseUp={handleInteract}
+      >
+        A
+      </button>
     </div>
   )
 }

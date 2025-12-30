@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Desktop from './components/Desktop'
 import StartMenu from './components/StartMenu'
 import Window from './components/Window'
-import P5Canvas from './components/P5Canvas'
+import P5Canvas, { MobileControls } from './components/P5Canvas'
+import { makeWorld } from './game/world'
 
 function App() {
   const [isStartMenuOpen, setIsStartMenuOpen] = useState(false)
@@ -10,6 +11,7 @@ function App() {
   const [isWelcomeOpen, setIsWelcomeOpen] = useState(true)
   const [isMobile, setIsMobile] = useState(false)
   const [showCanvas, setShowCanvas] = useState(false)
+  const worldRef = useRef<ReturnType<typeof makeWorld> | null>(null)
 
   const [isSystemInfoOpen, setIsSystemInfoOpen] = useState(false)
   
@@ -72,51 +74,55 @@ function App() {
     const canvasHeight = canvasWidth * 0.75 // 4:3 aspect ratio
 
     return (
-      <div className={`min-h-screen w-full flex flex-col items-center justify-start px-4 py-6 ${isDarkMode ? 'dark-mode' : ''}`} style={{ backgroundColor: 'var(--body-bg)' }}>
+      <div className={`min-h-screen w-full flex flex-col items-center justify-start ${isDarkMode ? 'dark-mode' : ''}`} style={{ backgroundColor: 'var(--body-bg)' }}>
         {isWelcomeOpen && (
-          <Window
-            id="welcome"
-            title="My Homepage"
-            isActive
-            isMobile
-            onActivate={() => setActiveWindow('welcome')}
-            onClose={() => {
-              setIsWelcomeOpen(false)
-              setShowCanvas(false)
-            }}
-          >
-            {showCanvas ? (
-              <div className="flex flex-col flex-grow min-h-0 w-full h-full items-center justify-center">
-                <P5Canvas width={canvasWidth} height={canvasHeight} isMobile={true} />
-              </div>
-            ) : (
-              <div className="flex flex-col items-center justify-center flex-grow w-full">
-                <div className="p-4 flex justify-center items-center">
-                  <div
-                    className="bg-cover bg-center"
-                    style={{
-                      width: `${Math.min(windowSize.width * 0.8, 360)}px`,
-                      height: `${Math.min(windowSize.width * 0.8, 360) * (338/360)}px`,
-                      boxShadow: 'inset -1.5px -1.5px 0 0 var(--win-border-light), inset 1.5px 1.5px 0 0 var(--win-shadow-dark)',
-                      backgroundImage: 'url("./assets/main.png")',
-                    }}
-                  />
+          <>
+            <Window
+              id="welcome"
+              title="My Homepage"
+              isActive
+              isMobile
+              onActivate={() => setActiveWindow('welcome')}
+              onClose={() => {
+                setIsWelcomeOpen(false)
+                setShowCanvas(false)
+              }}
+            >
+              {showCanvas ? (
+                <div className="flex flex-col flex-grow min-h-0 w-full h-full items-center justify-center">
+                  <P5Canvas width={canvasWidth} height={canvasHeight} isMobile={true} worldRef={worldRef} />
                 </div>
-                <div className="flex flex-col justify-center items-center py-4 bg-win-bg">
-                  <button
-                    className="win-button font-bold"
-                    onClick={() => setShowCanvas(true)}
-                    style={{
-                      boxShadow:
-                        'inset -3px -3px 0 0 var(--win-border-dark), inset 1.5px 1.5px 0 0 var(--win-border-dark), inset -4.5px -4.5px 0 0 var(--win-shadow-dark), inset 3px 3px 0 0 var(--win-border-light)',
-                    }}
-                  >
-                    <span className="start-btn">START</span>
-                  </button>
+              ) : (
+                <div className="flex flex-col items-center justify-center flex-grow w-full">
+                  <div className="p-4 flex justify-center items-center">
+                    <div
+                      className="bg-cover bg-center"
+                      style={{
+                        width: `${Math.min(windowSize.width * 0.8, 360)}px`,
+                        height: `${Math.min(windowSize.width * 0.8, 360) * (338/360)}px`,
+                        boxShadow: 'inset -1.5px -1.5px 0 0 var(--win-border-light), inset 1.5px 1.5px 0 0 var(--win-shadow-dark)',
+                        backgroundImage: 'url("./assets/main.png")',
+                      }}
+                    />
+                  </div>
+                  <div className="flex flex-col justify-center items-center py-4 bg-win-bg">
+                    <button
+                      className="win-button font-bold"
+                      onClick={() => setShowCanvas(true)}
+                      style={{
+                        boxShadow:
+                          'inset -3px -3px 0 0 var(--win-border-dark), inset 1.5px 1.5px 0 0 var(--win-border-dark), inset -4.5px -4.5px 0 0 var(--win-shadow-dark), inset 3px 3px 0 0 var(--win-border-light)',
+                      }}
+                    >
+                      <span className="start-btn">START</span>
+                    </button>
+                  </div>
                 </div>
-              </div>
-            )}
-          </Window>
+              )}
+            </Window>
+            {/* Mobile Controls - placed BELOW the window */}
+            {showCanvas && <MobileControls worldRef={worldRef} />}
+          </>
         )}
       </div>
     )
