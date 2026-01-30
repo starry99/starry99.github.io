@@ -120,9 +120,9 @@ export default function P5Canvas({ width = 512, height = 384, isMobile = false, 
       
       {/* Desktop Controls: Gender Selection (overlaid at bottom) */}
       {!isMobile && (
-        <div className="absolute bottom-4 left-0 w-full flex justify-center gap-4 pointer-events-none">
+        <div className="absolute bottom-2 left-0 w-full flex justify-center gap-4 pointer-events-none">
           <button 
-            className="pointer-events-auto win-button font-bold text-base"
+            className="pointer-events-auto win-button text-base"
             onClick={() => {
               if (worldRef.current) {
                 worldRef.current.setPlayerGender('male')
@@ -134,7 +134,7 @@ export default function P5Canvas({ width = 512, height = 384, isMobile = false, 
             Male
           </button>
           <button 
-            className="pointer-events-auto win-button font-bold text-base"
+            className="pointer-events-auto win-button text-base"
             onClick={() => {
               if (worldRef.current) {
                 worldRef.current.setPlayerGender('female')

@@ -108,7 +108,7 @@
 
 @layer components {
   .win-button {
-    @apply relative flex items-center justify-center px-1.5 py-0.5 w-[120px] h-9 bg-win-bg shadow-win-out;
+    @apply relative flex items-center justify-center px-1.5 py-0.5 w-[90px] h-8 bg-win-bg shadow-win-out;
     padding-bottom: 1.5px;
     padding-right: 1.5px;
     color: var(--classic-win-text);

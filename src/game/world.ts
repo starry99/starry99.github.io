@@ -11,7 +11,7 @@ export interface World {
     npcs: NPC[];
   map: TiledMap;
   dialogBox: DialogBox;
-  questMarkerSprite: p5.Image | null;
+
   makeScreenFlash: boolean;
   alpha: number;
   blinkBack: boolean;
@@ -37,7 +37,8 @@ export function makeWorld(p: p5): World {
   const player = makePlayer(p, 0, 0);
   const me = makeNPC(p, 0, 0, "/assets/me.png");
   const kid = makeNPC(p, 0, 0, "/assets/kid2.png");
-  const wife = makeNPC(p, 0, 0, "/assets/wife.png");
+  const teen = makeNPC(p, 0, 0, "/assets/1st.png");
+  const twenties = makeNPC(p, 0, 0, "/assets/2nd.png");
 
   // Interactable Objects (coordinates relative to map origin)
   // You can add more objects here with their positions and dialogue
@@ -48,10 +49,7 @@ export function makeWorld(p: p5): World {
     width: number;
     height: number;
     dialogue: string[];
-    interacted: boolean; // Tracks if player has already interacted
-    showMarker?: boolean; // Optional: show quest marker above object
-    markerOffsetX?: number; // Optional: custom X offset for marker (default 0)
-    markerOffsetY?: number; // Optional: custom Y offset for marker (default -20)
+
   }
 
   const interactableObjects: InteractableObject[] = [
@@ -64,7 +62,6 @@ export function makeWorld(p: p5): World {
       width: 32,
       height: 32,
       dialogue: ["I’ve been passionate about football since\nchildhood.", "The artistry of Wengerball lured me into\nsupporting Arsenal."],
-      interacted: false
     },
     // {
     //   name: "door",
@@ -82,10 +79,6 @@ export function makeWorld(p: p5): World {
       width: 64,
       height: 32,
       dialogue: ["I've loved stargazing since I was a kid. That\nfascination sparked my dream of space science.", "I primarily worked on scientific payloads\nfor satellites in grad school."],
-      interacted: false,
-      showMarker: true,
-      markerOffsetX: 10,
-      markerOffsetY: -10
     },
             {
       name: "bookshelf",
@@ -96,10 +89,6 @@ export function makeWorld(p: p5): World {
       dialogue: ["I double majored in Physics & EE at KAIST.\nI love diving deep into theories.",
         "I'm a generalist at heart. I enjoy the challenge\nof exploring and learning new fields."
       ],
-      interacted: false,
-      showMarker: true,
-      markerOffsetX: 12,
-      markerOffsetY: -10
     },
                 {
       name: "computer",
@@ -108,10 +97,6 @@ export function makeWorld(p: p5): World {
       width: 32,
       height: 64,
       dialogue: ["Welcoming my daughter into the world prompted\nme to switch to a dev role for more flexibility.", "I now dedicate most of my time to raising her,\nwhile finding time to code whenever I can."],
-      interacted: false,
-      showMarker: true,
-      markerOffsetX: 0,
-      markerOffsetY: 0,
     },
                     {
       name: "chair",
@@ -120,7 +105,6 @@ export function makeWorld(p: p5): World {
       width: 32,
       height: 32,
       dialogue: ["Welcoming my daughter into the world prompted\nme to switch to a dev role for more flexibility.", "I now dedicate most of my time to raising her,\nwhile finding time to code whenever I can."],
-      interacted: false,
     },
   ];
 
@@ -279,10 +263,10 @@ export function makeWorld(p: p5): World {
   return {
     camera: makeCamera(p, 100, 0),
     player: player,
-    npcs: [me, kid, wife],
+    npcs: [me, kid, teen, twenties],
     map: makeTiledMap(p, 100, -150),
     dialogBox: makeDialogBox(p, 0, 280),
-    questMarkerSprite: null,
+
     makeScreenFlash: false,
     alpha: 0,
     blinkBack: false,
@@ -294,7 +278,7 @@ export function makeWorld(p: p5): World {
       this.map.load(["/assets/interior_tileset.png", "/assets/christmas.png", "/assets/4th_gen_indoor_tileset.png"], "/maps/world.json");
       this.player.load();
       this.npcs.forEach(npc => npc.load());
-      this.questMarkerSprite = p.loadImage("/assets/quest_marker.png");
+
     },
     setup() {
       this.map.prepareTiles();
@@ -316,10 +300,15 @@ export function makeWorld(p: p5): World {
                 this.npcs[1].x = this.map.x + spawnPoint.x;
                 this.npcs[1].y = this.map.y + spawnPoint.y + 32;
                 break;
-            case "npc3":
-                // wife
+            case "npc1":
+                // 10s me
                 this.npcs[2].x = this.map.x + spawnPoint.x;
                 this.npcs[2].y = this.map.y + spawnPoint.y + 32;
+                break;
+            case "npc3":
+                // 20s me
+                this.npcs[3].x = this.map.x + spawnPoint.x;
+                this.npcs[3].y = this.map.y + spawnPoint.y + 32;
                 break;    
             default:
             }
@@ -332,14 +321,9 @@ export function makeWorld(p: p5): World {
     },
 
     update() {
-      if (this.map.tiledData) {
-        const mapW = this.map.getPixelWidth();
-        const mapH = this.map.getPixelHeight();
-
-        this.scale = Math.min(p.width / mapW, p.height / mapH);
-    
-        if (!isFinite(this.scale) || this.scale <= 0) this.scale = 1;
-      }
+        // Auto-fitting to screen makes everything too small if the map is big.
+        // using a fixed scale instead.
+        this.scale = 1;
 
       // Handle mobile direction input
       if (this.mobileDirection && !this.player.freeze) {
@@ -386,33 +370,7 @@ export function makeWorld(p: p5): World {
       this.npcs.forEach(npc => npc.draw(this.camera));
       this.player.draw(this.camera);
 
-      p.push(); 
-      for (const obj of interactableObjects) {
-        if (obj.showMarker && !obj.interacted) {
-          const objWorldX = this.map.x + obj.x + obj.width / 2;
-          const objWorldY = this.map.y + obj.y;
-          
-          const offsetX = obj.markerOffsetX ?? 0;
-          const offsetY = obj.markerOffsetY ?? -20;
-          
-          const screenX = objWorldX + this.camera.x + offsetX;
-          const screenY = objWorldY + this.camera.y + offsetY;
-
-          if (this.questMarkerSprite) {
-            p.imageMode(p.CENTER);
-            p.image(this.questMarkerSprite, screenX, screenY, 24, 24);
-            p.imageMode(p.CORNER); 
-          } else {
-            p.fill(255, 215, 0);
-            p.stroke(0);
-            p.strokeWeight(2);
-            p.textSize(20);
-            p.textAlign(p.CENTER, p.BOTTOM);
-            p.text("!", screenX, screenY);
-          }
-        }
-      }
-      p.pop(); 
+ 
 
       this.dialogBox.draw();
       
@@ -497,7 +455,6 @@ export function makeWorld(p: p5): World {
 
         if (interactionFound) {
             this.player.freeze = true;
-            obj.interacted = true;
             this.dialogBox.startDialogue(
                 obj.dialogue,
                 () => {
@@ -529,13 +486,42 @@ export function makeWorld(p: p5): World {
                     this.player.freeze = true;
                     this.dialogBox.startDialogue(
                     [
-                        "Welcome to my little pixel home!\nFeel free to poke around!",
+                        "Hi! I’m me in my thirties - my current self.",
+                        "Welcoming my daughter into the world inspired\nme to switch to a dev role for more flexibility.", 
+                        "I spend most of my days raising her,\nwhile finding time to code whenever I can."
                     ],
                     () => {
                         this.player.freeze = false;
                     }
                     );
                     return; 
+                } else if (npc === this.npcs[2]) {
+                    this.player.freeze = true;
+                    this.dialogBox.startDialogue(
+                    [
+                        "Hi! I’m the teenage version of me.",
+                        "I'm into so many things,\nbut I love soccer and space the most!",
+                        "I want to be an astronomer when I grow up!",
+                    ],
+                    () => {
+                        this.player.freeze = false;
+                    }
+                    );
+                    return; 
+                } else if (npc === this.npcs[3]) {
+                    this.player.freeze = true;
+                    this.dialogBox.startDialogue(
+                    [
+                        "Hey! I’m me in my twenties.",
+                        "I double majored in Physics & EE at KAIST.\nI love diving deep into theories.",
+                        "Currently, I’m in grad school,\nworking on scientific payloads for satellites.",
+                        
+                    ],
+                    () => {
+                        this.player.freeze = false;
+                    }
+                    );
+                    return;     
                 } else if (npc === this.npcs[1]) {
                     this.player.freeze = true;
                     const birthDate = new Date("2020-08-28");

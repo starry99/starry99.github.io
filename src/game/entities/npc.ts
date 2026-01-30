@@ -77,7 +77,6 @@ export function makeNPC(p: p5, x: number, y: number, spritePath: string): NPC {
         p.scale(-1, 1);
         p.translate(-2 * this.screenX - this.tileWidth, 0);
       }
-      // debugMode.drawHitbox(p, this);
       if (this.spriteRef && this.currentFrameData) {
         drawTile(
             p,
@@ -98,8 +97,6 @@ export function makeNPC(p: p5, x: number, y: number, spritePath: string): NPC {
     },
 
     handleCollisionsWith(entity: any, collisionEvent?: () => void) {
-      // If the player has already collided and is frozen due to dialog
-      // no need to recompute collision
       if (entity.freeze) return;
 
       const collision = checkCollision(this, entity);
