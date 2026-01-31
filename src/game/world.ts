@@ -514,7 +514,7 @@ export function makeWorld(p: p5): World {
                     [
                         "Hey! I’m me in my twenties.",
                         "I double majored in Physics & EE at KAIST.\nI love diving deep into theories.",
-                        "Currently, I’m in grad school,\nworking on scientific payloads for satellites.",
+                        "I’m now working on scientific payloads\nfor satellites in grad school!",
                         
                     ],
                     () => {
